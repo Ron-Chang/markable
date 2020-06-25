@@ -35,11 +35,7 @@ class Varimarkable:
 
     @staticmethod
     def _is_hex(data):
-        if not isinstance(data, str):
-            return False
-        if not data.startswith('#'):
-            return False
-        if len(data) != 7:
+        if not (isinstance(data, str) and data.startswith('#') and len(data) != 7):
             return False
         for character in data.strip('#').upper():
             if character.isdigit():
