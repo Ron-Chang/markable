@@ -12,10 +12,10 @@ class Varimarkable:
 
     SWITCH = True
 
-    RESET = '\x1b[0m'
+    _RESET = '\x1b[0m'
 
-    FG = '38'
-    BG = '48'
+    _FG = '38'
+    _BG = '48'
 
     @staticmethod
     def hex_to_rgb(color: str) -> tuple:
@@ -29,8 +29,8 @@ class Varimarkable:
 
     @classmethod
     def _format(cls, fg, bg):
-        fg_tag = f'\x1b[{cls.FG};2;{fg[0]};{fg[1]};{fg[2]}m' if fg else str()
-        bg_tag = f'\x1b[{cls.BG};2;{bg[0]};{bg[1]};{bg[2]}m' if bg else str()
+        fg_tag = f'\x1b[{cls._FG};2;{fg[0]};{fg[1]};{fg[2]}m' if fg else str()
+        bg_tag = f'\x1b[{cls._BG};2;{bg[0]};{bg[1]};{bg[2]}m' if bg else str()
         return f'{fg_tag}{bg_tag}'
 
     @staticmethod
@@ -54,7 +54,7 @@ class Varimarkable:
         if not cls.SWITCH:
             return str()
         if fg is None and bg is None:
-            return cls.RESET
+            return cls._RESET
         fg_rgb = cls.hex_to_rgb(fg) if cls._is_hex(fg) else fg
         bg_rgb = cls.hex_to_rgb(bg) if cls._is_hex(bg) else bg
         return cls._format(fg=fg_rgb, bg=bg_rgb)
@@ -62,7 +62,7 @@ class Varimarkable:
     @classmethod
     def dye(cls, line, fg=None, bg=None):
         tag = cls.get_tag(fg=fg, bg=bg)
-        reset = cls.RESET if cls.SWITCH else str()
+        reset = cls._RESET if cls.SWITCH else str()
         print(f'{tag}{line}{reset}')
 
     @classmethod
@@ -71,17 +71,49 @@ class Varimarkable:
         print(tag)
 
     @classmethod
-    def rest_color(cls):
+    def reset_color(cls):
         if not cls.SWITCH:
             return None
-        print(cls.RESET)
+        print(cls._RESET)
+
+    @classmethod
+    def run_demo(cls):
+
+        print('[Function dye]')
+        print('-' * 76)
+        print("Varimarkable.dye(line='This is a demo!', fg='#32efef')")
+        cls.dye(line='This is a demo!', fg='#32efef')
+        print('-' * 76)
+        print('\n')
+
+        print('[Function set_color & reset_color]')
+        print('-' * 76)
+        print("Varimarkable.set_color(fg='#AD2E2E')")
+        cls.set_color(fg='#AD2E2E')
+        print('PRINT SOMETHING HERE')
+        cls.set_color(bg=(165, 170, 25))
+        print("Varimarkable.set_color(bg=(165, 170, 25))")
+        print('PRINT SOMETHING HERE')
+        cls.reset_color()
+        print("Varimarkable.reset_color()")
+        print('-' * 76)
+        print('\n')
+
+        print('[SWITCH]')
+        print('-' * 76)
+        print("Varimarkable.SWITCH = False")
+        cls.SWITCH = False
+        print("Varimarkable.dye(line='This is a demo!', fg='#32efef')")
+        cls.dye(line='This is a demo!', fg='#32efef')
+        print("Varimarkable.set_color(fg='#ad2e2e')")
+        cls.set_color(fg='#ad2e2e')
+        print('PRINT SOMETHING HERE')
+        cls.set_color(bg='#ad2e2e')
+        print('PRINT SOMETHING HERE')
+        print("Varimarkable.reset_color()")
+        cls.reset_color()
+        print('-' * 76)
 
 
 if __name__ == '__main__':
-#     Varimarkable.SWITCH = False
-    Varimarkable.dye(line='hello', fg='#32efef', bg=None)
-    Varimarkable.set_color(fg='#ad2e2e')
-    print('Hey, how have you been?')
-    print(98)
-    Varimarkable.rest_color()
-    print('reseted')
+    Varimarkable.run_demo()
