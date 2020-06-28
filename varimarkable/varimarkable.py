@@ -35,7 +35,7 @@ class Varimarkable:
 
     @staticmethod
     def _is_hex(data):
-        if not (isinstance(data, str) and data.startswith('#') and len(data) != 7):
+        if not (isinstance(data, str) and data.startswith('#') and len(data) == 7):
             return False
         for character in data.strip('#').upper():
             if character.isdigit():
@@ -47,6 +47,14 @@ class Varimarkable:
 
     @classmethod
     def get_tag(cls, fg=None, bg=None):
+        """
+        :param fg: foreground color which is the color of text, accepted '#ffffff' or (255, 255, 255)
+        :type fg: str or tuple
+        :param bg: background color, accepted '#ffffff' or (255, 255, 255)
+        :type bg: str or tuple
+        :rtype: None
+        :return: None
+        """
         if not cls.SWITCH:
             return str()
         if fg is None and bg is None:
@@ -57,12 +65,30 @@ class Varimarkable:
 
     @classmethod
     def dye(cls, line, fg=None, bg=None):
+        """
+        :param line: the text gonna print out on the terminal
+        :type line: str
+        :param fg: foreground color which is the color of text, accepted '#ffffff' or (255, 255, 255)
+        :type fg: str or tuple
+        :param bg: background color, accepted '#ffffff' or (255, 255, 255)
+        :type bg: str or tuple
+        :rtype: None
+        :return: None
+        """
         tag = cls.get_tag(fg=fg, bg=bg)
         reset = cls._RESET if cls.SWITCH else str()
         print(f'{tag}{line}{reset}')
 
     @classmethod
     def set_color(cls, fg=None, bg=None):
+        """
+        :param fg: foreground color which is the color of text, accepted '#ffffff' or (255, 255, 255)
+        :type fg: str or tuple
+        :param bg: background color, accepted '#ffffff' or (255, 255, 255)
+        :type bg: str or tuple
+        :rtype: None
+        :return: None
+        """
         tag = cls.get_tag(fg=fg, bg=bg)
         print(tag)
 
@@ -71,3 +97,4 @@ class Varimarkable:
         if not cls.SWITCH:
             return None
         print(cls._RESET)
+
