@@ -10,7 +10,7 @@
 ## How to use:
     
 ```python
-from path.name import Varimarkable
+from varimarkable import Varimarkable
 ```
 
 - render a single line:
@@ -33,7 +33,7 @@ Varimarkable.reset_color()
 
 - Disable all tags
 ```python
-from path.name import Varimarkable
+from varimarkable import Varimarkable
 Varimarkable.SWITCH = False
 ```
 

@@ -1,8 +1,0 @@
-README.md
-setup.py
-Varimarkable.egg-info/PKG-INFO
-Varimarkable.egg-info/SOURCES.txt
-Varimarkable.egg-info/dependency_links.txt
-Varimarkable.egg-info/top_level.txt
-varimarkable/__init__.py
-varimarkable/varimarkable.py
