@@ -3,12 +3,6 @@ import os
 
 
 class Varimarkable:
-    """
-    - Set global switch
-    - Set dye begin and end point
-    - Set single line color
-    - Get color tag and reset tag
-    """
 
     SWITCH = True
 
@@ -18,13 +12,11 @@ class Varimarkable:
     _BG = '48'
 
     @staticmethod
-    def hex_to_rgb(color: str) -> tuple:
+    def _hex_to_rgb(color: str) -> tuple:
         """
         #ffffff -> (255, 255, 255)
         """
-        color = color.strip('#') if color.startswith('#') else color
-        if len(color) != 6:
-            raise ValueError('Hex color tag length must equals 6 without "#".')
+        color = color.strip('#')
         return int(color[0:2], 16), int(color[2:4], 16), int(color[4:6], 16)
 
     @classmethod
@@ -34,43 +26,72 @@ class Varimarkable:
         return f'{fg_tag}{bg_tag}'
 
     @staticmethod
-    def _is_hex(data):
-        if not (isinstance(data, str) and data.startswith('#') and len(data) == 7):
+    def _is_valid_rgb_color_tuple(data):
+        """
+        RGB tuple must contain 3 numbers and all of them must between 0 to 255.
+        """
+        if not (isinstance(data, tuple) and len(data) == 3):
             return False
-        for character in data.strip('#').upper():
+        for value in data:
+            if not (isinstance(value, int) and 0 <= value <= 255):
+                return False
+        return True
+
+    @staticmethod
+    def _is_valid_hex_color_code(data):
+        """
+        Hex color code required prefix "#", followed with 6 numbers and or alphabets which including
+        "0" to "9" and "A" to "F" (case-insensitive).
+        """
+        if not (isinstance(data, str) and data.startswith('#')):
+            return False
+        color = data.strip('#').upper()
+        if len(color) != 6:
+            return False
+        for character in color:
             if character.isdigit():
                 continue
-            if character in ['A', 'B', 'C', 'D', 'E', 'F']:
+            if character in {'A', 'B', 'C', 'D', 'E', 'F'}:
                 continue
             return False
         return True
 
     @classmethod
+    def _rgb_adapter(cls, color):
+        if color is None:
+            return None
+        if cls._is_valid_rgb_color_tuple(data=color):
+            return color
+        if cls._is_valid_hex_color_code(data=color):
+            return cls._hex_to_rgb(color=color)
+        raise ValueError(f'Input color required "hex color code" or a "RGB color tuple". {color}')
+
+    @classmethod
     def get_tag(cls, fg=None, bg=None):
         """
-        :param fg: foreground color which is the color of text, accepted '#ffffff' or (255, 255, 255)
+        :param fg: foreground(text) color, accept 2 different way to set color '#ffffff' or (255, 255, 255)
         :type fg: str or tuple
-        :param bg: background color, accepted '#ffffff' or (255, 255, 255)
+        :param bg: background color, accept 2 different way to set color '#ffffff' or (255, 255, 255)
         :type bg: str or tuple
-        :rtype: None
-        :return: None
+        :rtype: str
+        :return: terminal color tag
         """
         if not cls.SWITCH:
             return str()
         if fg is None and bg is None:
             return cls._RESET
-        fg_rgb = cls.hex_to_rgb(fg) if cls._is_hex(fg) else fg
-        bg_rgb = cls.hex_to_rgb(bg) if cls._is_hex(bg) else bg
-        return cls._format(fg=fg_rgb, bg=bg_rgb)
+        tag = cls._format(fg=cls._rgb_adapter(color=fg),
+                          bg=cls._rgb_adapter(color=bg))
+        return tag
 
     @classmethod
     def dye(cls, line, fg=None, bg=None):
         """
-        :param line: the text gonna print out on the terminal
+        :param line: A line you'd like to display on the terminal.
         :type line: str
-        :param fg: foreground color which is the color of text, accepted '#ffffff' or (255, 255, 255)
+        :param fg: foreground(text) color, accept 2 different way to set color '#ffffff' or (255, 255, 255)
         :type fg: str or tuple
-        :param bg: background color, accepted '#ffffff' or (255, 255, 255)
+        :param bg: background color, accept 2 different way to set color '#ffffff' or (255, 255, 255)
         :type bg: str or tuple
         :rtype: None
         :return: None
@@ -80,21 +101,30 @@ class Varimarkable:
         print(f'{tag}{line}{reset}')
 
     @classmethod
-    def set_color(cls, fg=None, bg=None):
+    def set(cls, fg=None, bg=None, mark=False):
         """
-        :param fg: foreground color which is the color of text, accepted '#ffffff' or (255, 255, 255)
+        :param fg: foreground(text) color, accept 2 different way to set color '#ffffff' or (255, 255, 255)
         :type fg: str or tuple
-        :param bg: background color, accepted '#ffffff' or (255, 255, 255)
+        :param bg: background color, accept 2 different way to set color '#ffffff' or (255, 255, 255)
         :type bg: str or tuple
+        :param mark: toggle divider, default is False.
+        :type mark: bool
         :rtype: None
         :return: None
         """
+        if mark and cls.SWITCH:
+            print(f'{" START ":=^76}', end='\r', flush=True)
         tag = cls.get_tag(fg=fg, bg=bg)
         print(tag)
 
     @classmethod
-    def reset_color(cls):
+    def reset(cls, mark=False):
+        """
+        :param mark: toggle divider, default is False.
+        :type mark: bool
+        """
         if not cls.SWITCH:
             return None
+        if mark:
+            print(f'{" END ":=^76}', end='\r', flush=True)
         print(cls._RESET)
-
