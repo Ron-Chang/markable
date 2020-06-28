@@ -4,3 +4,4 @@ setup.py
 .egg-info
 dist
 build
+Varimarkable.egg-info
