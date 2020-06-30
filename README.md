@@ -24,11 +24,11 @@ Marker.print(line='Hello World!', fg=(255, 0, 0))
 ```python
 from markable import Marker
 
-Marker.set_color(bg='#ffff00')  # set start point
+Marker.set(bg='#ffff00')  # set start point
 print('SOMETHING')  # do 
 print('TEST')  # somethin
 print('DEBUG')  # here
-Marker.reset_color()  # reset to default
+Marker.reset()  # reset to default
 ```
 
 ### - Global trigger:
