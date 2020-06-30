@@ -19,4 +19,4 @@
 # SOFTWARE.
 
 
-from .varimarkable import Varimarkable
+from .markable import Marker

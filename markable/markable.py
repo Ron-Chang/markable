@@ -2,7 +2,7 @@ import sys
 import os
 
 
-class Varimarkable:
+class Marker:
 
     SWITCH = True
 
@@ -69,6 +69,7 @@ class Varimarkable:
     @classmethod
     def get_tag(cls, fg=None, bg=None):
         """
+        Call the function without any params will return reset tag.
         :param fg: foreground(text) color, accept 2 different way to set color '#ffffff' or (255, 255, 255)
         :type fg: str or tuple
         :param bg: background color, accept 2 different way to set color '#ffffff' or (255, 255, 255)
@@ -85,7 +86,7 @@ class Varimarkable:
         return tag
 
     @classmethod
-    def dye(cls, line, fg=None, bg=None):
+    def print(cls, line, fg=None, bg=None, end='\n', file=sys.stdout, flush=False):
         """
         :param line: A line you'd like to display on the terminal.
         :type line: str
@@ -93,12 +94,15 @@ class Varimarkable:
         :type fg: str or tuple
         :param bg: background color, accept 2 different way to set color '#ffffff' or (255, 255, 255)
         :type bg: str or tuple
+        :param end: Optional. Specify what to print at the end. Default is '\n' (line feed)
+        :param file: Optional. An object with a write method. Default is sys.stdout
+        :param flush: Optional. A Boolean, specifying if the output is flushed (True) or buffered (False). Default is False
         :rtype: None
         :return: None
         """
         tag = cls.get_tag(fg=fg, bg=bg)
         reset = cls._RESET if cls.SWITCH else str()
-        print(f'{tag}{line}{reset}')
+        print(f'{tag}{line}{reset}', end=end, file=file, flush=flush)
 
     @classmethod
     def set(cls, fg=None, bg=None, mark=False):
