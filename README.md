@@ -1,4 +1,4 @@
-# VARImarkABLE
+# MARKABLE
 
 ## Aim:
 - Render text in terminal
@@ -10,7 +10,7 @@
 ## How to use:
 > Note: Marker.print() method inherited few parameters from print(`end='\n'`, `flush=False`, `file=sys.stdout`)
 
-###- Proceed a single line:
+### - Proceed a single line:
 
 ```python
 from markable import Marker
@@ -19,7 +19,7 @@ Marker.print(line='Hello World!', fg='#ff0000')  # case-insensitive
 Marker.print(line='Hello World!', fg=(255, 0, 0))
 ```
 
-###- Proceed a multiple lines:
+### - Proceed a multiple lines:
 
 ```python
 from markable import Marker
@@ -31,7 +31,7 @@ print('DEBUG')  # here
 Marker.reset_color()  # reset to default
 ```
 
-###- Global trigger:
+### - Global trigger:
 
 ```python
 from markable import Marker
